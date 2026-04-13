@@ -2,7 +2,7 @@
 
 > **Hybrid Haversine-SAW and Generative AI for B2B MSME Partner Discovery Mobile Application**
 >
-> Research paper submitted to the 11th International Conference on Computer Science and Computational Intelligence (ICCSCI 2026), published in Procedia Computer Science (Elsevier).
+
 
 ---
 
