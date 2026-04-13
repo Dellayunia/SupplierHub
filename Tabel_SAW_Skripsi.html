@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: "Times New Roman", Times, serif;
+    padding: 20px;
+    background-color: white; /* Memastikan background bersih tidak abu-abu */
+  }
+  .table-caption {
+    text-align: center;
+    font-variant: small-caps; /* Format wajb judul tabel IEEE */
+    font-size: 11pt;
+    margin-bottom: 5px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+    font-size: 10pt; /* Ukuran font standar dalam tabel skripsi */
+  }
+  th, td {
+    border: 1px solid black; /* Konfigurasi garis grid tabel */
+    padding: 6px;
+  }
+  th {
+    background-color: transparent; 
+    font-weight: bold;
+    text-align: center; 
+  }
+  td {
+    text-align: left;
+    vertical-align: top;
+  }
+  .center-col {
+    text-align: center; 
+  }
+  .italic-notes {
+    font-size: 9pt;
+    font-style: italic;
+    color: #444; /* sedikit redup pembuktian rumus */
+  }
+</style>
+</head>
+<body>
+
+<div class="table-caption">TABLE IV. Sampel Keluaran Komputasi Simple Additive Weighting</div>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width: 12%;">ID Kandidat</th>
+      <th style="width: 15%;">Jarak Haversine (Km)</th>
+      <th style="width: 13%;">Skor Rating (/5.0)</th>
+      <th style="width: 20%;">Normalisasi C1 (Jarak)</th>
+      <th style="width: 20%;">Normalisasi C2 (Rating)</th>
+      <th style="width: 20%;">Nilai Akhir SAW (V<sub>i</sub>)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>Mitra A</b></td>
+      <td class="center-col">1.2 Km</td>
+      <td class="center-col">4.0</td>
+      <td class="center-col"><b>1.00</b><br><span class="italic-notes">(Terdekat / C1 Terbaik)</span></td>
+      <td class="center-col">0.83<br><span class="italic-notes">(4.0 / 4.8)</span></td>
+      <td class="center-col"><b>93.20</b><br><span>(Peringkat 1)</span></td>
+    </tr>
+    <tr>
+      <td><b>Mitra B</b></td>
+      <td class="center-col">2.5 Km</td>
+      <td class="center-col"><b>4.8</b></td>
+      <td class="center-col">0.48<br><span class="italic-notes">(1.2 / 2.5)</span></td>
+      <td class="center-col"><b>1.00</b><br><span class="italic-notes">(Tertinggi / C2 Terbaik)</span></td>
+      <td class="center-col"><b>68.80</b><br><span>(Peringkat 2)</span></td>
+    </tr>
+    <tr>
+      <td><b>Mitra C</b></td>
+      <td class="center-col">4.8 Km</td>
+      <td class="center-col">4.2</td>
+      <td class="center-col">0.25<br><span class="italic-notes">(1.2 / 4.8)</span></td>
+      <td class="center-col">0.87<br><span class="italic-notes">(4.2 / 4.8)</span></td>
+      <td class="center-col"><b>49.80</b><br><span>(Peringkat 3)</span></td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

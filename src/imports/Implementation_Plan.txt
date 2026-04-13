@@ -1,0 +1,532 @@
+# SupplierAI MVP — Frontend Implementation Plan
+
+Rencana teknis untuk membangun frontend aplikasi mobile **SupplierAI** — platform yang membantu supplier menemukan dan melamar kerja sama dengan mitra bisnis potensial menggunakan data Google Maps dan algoritma rekomendasi AI sederhana.
+
+---
+
+## UI/UX Design Preview
+
+![Desain 5 layar utama aplikasi SupplierAI](C:\Users\user\.gemini\antigravity\brain\0c7d89ac-4754-4373-a5ce-b520a419efc1\app_screens_overview_1773104393203.png)
+
+![Alur navigasi aplikasi](C:\Users\user\.gemini\antigravity\brain\0c7d89ac-4754-4373-a5ce-b520a419efc1\navigation_flow_1773104434355.png)
+
+---
+
+## Navigation Flow
+
+```mermaid
+graph TD
+    A["Splash Screen"] --> B{"User Logged In?"}
+    B -- No --> C["Login / Register"]
+    C --> D["Profile Setup"]
+    D --> E["Main App"]
+    B -- Yes --> E
+    E --> F["Tab: Explore (Map + List)"]
+    E --> G["Tab: Applications"]
+    E --> H["Tab: Profile"]
+    F --> I["Partner Detail (Push)"]
+    I --> J["Apply Form (Modal)"]
+    J --> G
+```
+
+### Penjelasan Navigasi
+
+| Layer | Jenis | Screen |
+|---|---|---|
+| **Root** | Conditional | Splash → Auth Check |
+| **Auth Stack** | Stack Navigator | Login → Register → Profile Setup |
+| **Main App** | Bottom Tab Navigator | Explore · Applications · Profile |
+| **Nested Stacks** | Push / Modal | Partner Detail → Apply Form |
+
+---
+
+## Tech Stack
+
+| Teknologi | Fungsi | Alasan Pemilihan |
+|---|---|---|
+| **React Native + Expo SDK 52** | Framework mobile | Cross-platform, developer experience terbaik, ecosystem besar |
+| **Expo Router v4** | Navigasi file-based | Otomatis routing berdasarkan folder, mendukung tabs & stacks |
+| **Zustand** | State management | Ringan (~2KB), mudah dipakai, tidak perlu boilerplate |
+| **Firebase Auth** | Autentikasi | Email/password login siap pakai, gratis untuk skala MVP |
+| **Cloud Firestore** | Database | Realtime sync, skema fleksibel, Firebase SDK terintegrasi |
+| **Google Places API** | Data mitra | Rating, review, lokasi, foto — semua dari satu API |
+| **react-native-maps** | Peta interaktif | Library paling stabil untuk Google Maps di React Native |
+| **expo-location** | GPS pengguna | Mendapatkan koordinat supplier untuk kalkulasi jarak |
+
+---
+
+## Folder Structure
+
+```
+mobileapp-supplier-ai/
+├── app/                          # Expo Router (file-based routing)
+│   ├── _layout.tsx               # Root layout (auth check)
+│   ├── index.tsx                 # Splash / redirect
+│   ├── (auth)/                   # Auth group
+│   │   ├── _layout.tsx
+│   │   ├── login.tsx
+│   │   ├── register.tsx
+│   │   └── profile-setup.tsx
+│   └── (tabs)/                   # Main tab group
+│       ├── _layout.tsx           # Tab bar config
+│       ├── explore/
+│       │   ├── _layout.tsx
+│       │   ├── index.tsx         # Map + List view
+│       │   └── [id].tsx          # Partner Detail
+│       ├── applications/
+│       │   ├── _layout.tsx
+│       │   └── index.tsx         # Status Tracker
+│       └── profile/
+│           ├── _layout.tsx
+│           └── index.tsx         # Edit Profile
+├── components/                   # Reusable UI components
+│   ├── ui/
+│   │   ├── Button.tsx
+│   │   ├── Input.tsx
+│   │   ├── Badge.tsx
+│   │   ├── Card.tsx
+│   │   └── BottomSheet.tsx
+│   ├── PartnerCard.tsx
+│   ├── MapMarker.tsx
+│   ├── ApplicationItem.tsx
+│   └── FilterChips.tsx
+├── lib/                          # Utilities & services
+│   ├── firebase.ts               # Firebase config & init
+│   ├── places.ts                 # Google Places API wrapper
+│   ├── ai-scoring.ts             # AI recommendation algorithm
+│   ├── types.ts                  # TypeScript interfaces
+│   └── constants.ts              # Colors, spacing, fonts
+├── stores/                       # Zustand stores
+│   ├── auth-store.ts
+│   ├── partner-store.ts
+│   └── application-store.ts
+├── assets/                       # Images, fonts, icons
+├── app.json                      # Expo config
+├── package.json
+└── tsconfig.json
+```
+
+---
+
+## Screen Specifications
+
+### 1. Login / Register (`(auth)/login.tsx` & `register.tsx`)
+
+```
+┌─────────────────────────────┐
+│                             │
+│        ╔═══════════╗        │
+│        ║SupplierAI ║        │
+│        ╚═══════════╝        │
+│      Temukan Mitra Anda     │
+│                             │
+│  ┌───────────────────────┐  │
+│  │ ✉  Email              │  │
+│  └───────────────────────┘  │
+│  ┌───────────────────────┐  │
+│  │ 🔒 Password           │  │
+│  └───────────────────────┘  │
+│                             │
+│  ┌───────────────────────┐  │
+│  │      ▶ MASUK          │  │
+│  └───────────────────────┘  │
+│                             │
+│    Belum punya akun?        │
+│    [ Daftar di sini ]       │
+│                             │
+└─────────────────────────────┘
+```
+
+**Layout:**
+- Logo "SupplierAI" di atas (gradient text biru-ungu)
+- Form card dengan glassmorphism effect
+- Input: Email, Password (+ Nama di register)
+- Tombol primary "Masuk" / "Daftar"
+- Link toggle "Belum punya akun?" / "Sudah punya akun?"
+
+**State:** Zustand `auth-store` → `user`, `isAuthenticated`, `isLoading`
+
+**Integrasi:** Firebase Auth `signInWithEmailAndPassword` / `createUserWithEmailAndPassword`
+
+---
+
+### 2. Profile Setup (`(auth)/profile-setup.tsx`)
+
+```
+┌─────────────────────────────┐
+│  ← Lengkapi Profil          │
+│                             │
+│         ┌─────┐             │
+│         │ 📷  │             │
+│         │ +   │             │
+│         └─────┘             │
+│      Upload Foto            │
+│                             │
+│  Nama Bisnis                │
+│  ┌───────────────────────┐  │
+│  │ PT. Sumber Makmur     │  │
+│  └───────────────────────┘  │
+│  Deskripsi Singkat          │
+│  ┌───────────────────────┐  │
+│  │ Supplier bahan pokok  │  │
+│  └───────────────────────┘  │
+│  Kategori Produk            │
+│  ┌───────────────────────┐  │
+│  │ Makanan           ▼   │  │
+│  └───────────────────────┘  │
+│  Lokasi                     │
+│  ┌───────────────────────┐  │
+│  │ 📍 Detect otomatis    │  │
+│  └───────────────────────┘  │
+│                             │
+│  ┌───────────────────────┐  │
+│  │   ▶ SIMPAN PROFIL     │  │
+│  └───────────────────────┘  │
+└─────────────────────────────┘
+```
+
+**Layout:**
+- Avatar upload circle (opsional)
+- Input: Nama Bisnis, Deskripsi Singkat
+- Dropdown: Kategori Produk (Makanan, Minuman, Elektronik, dll)
+- Location picker: Auto-detect GPS + manual input
+- Tombol "Simpan Profil"
+
+**State:** Firestore doc `suppliers/{uid}`
+
+---
+
+### 3. Explore — Map + List (`(tabs)/explore/index.tsx`)
+
+> [!IMPORTANT]
+> Ini adalah **layar utama** aplikasi dan yang paling kompleks.
+
+**Mode Peta (default):**
+```
+┌─────────────────────────────┐
+│ ┌───────────────────────┐   │
+│ │ 🔍 Cari mitra...      │   │
+│ └───────────────────────┘   │
+│ [Cafe] [Bengkel] [Toko] ►  │
+│                             │
+│    ┌──── GOOGLE MAP ────┐   │
+│    │                    │   │
+│    │   📍        📍     │   │
+│    │        📍          │   │
+│    │  📍       📍       │   │
+│    │        ◉ (You)     │   │
+│    │   📍               │   │
+│    └────────────────────┘   │
+│ ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐ │
+│   ═══ (drag handle) ═══    │
+│ │ ⭐ Mitra Prioritas      │ │
+│ │ ┌─────────────────────┐ │ │
+│ │ │🏪 Cafe ABC  ⭐4.8   │ │ │
+│ │ │   1.2 km • Cafe     │ │ │
+│ │ ├─────────────────────┤ │ │
+│ │ │🏪 Toko XYZ  ⭐4.5   │ │ │
+│ │ │   2.1 km • Toko     │ │ │
+│ │ └─────────────────────┘ │ │
+│ └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘ │
+├─────────────────────────────┤
+│  🗺 Explore  📋 App  👤 Me │
+└─────────────────────────────┘
+```
+
+**Mode List:**
+```
+┌─────────────────────────────┐
+│ ┌───────────────────────┐   │
+│ │ 🔍 Cari mitra...      │   │
+│ └───────────────────────┘   │
+│ [Cafe] [Bengkel] [Toko] ►  │
+│  [🗺 Peta] [📋 List ✓]     │
+│                             │
+│ ┌─────────────────────────┐ │
+│ │ 🖼 │ Cafe ABC           │ │
+│ │    │ ⭐ 4.8 (120 ulasan)│ │
+│ │    │ 📍 1.2 km • Cafe   │ │
+│ │    │ Score: 92          │ │
+│ └─────────────────────────┘ │
+│ ┌─────────────────────────┐ │
+│ │ 🖼 │ Toko XYZ           │ │
+│ │    │ ⭐ 4.5 (89 ulasan) │ │
+│ │    │ 📍 2.1 km • Toko   │ │
+│ │    │ Score: 85          │ │
+│ └─────────────────────────┘ │
+│ ┌─────────────────────────┐ │
+│ │ 🖼 │ Bengkel Jaya       │ │
+│ │    │ ⭐ 4.2 (56 ulasan) │ │
+│ │    │ 📍 3.5 km • Bengkel│ │
+│ │    │ Score: 74          │ │
+│ └─────────────────────────┘ │
+├─────────────────────────────┤
+│  🗺 Explore  📋 App  👤 Me │
+└─────────────────────────────┘
+```
+
+**AI Sorting Algorithm:**
+```
+score = (rating / 5) × 0.6 + (1 - distance / maxRadius) × 0.4
+```
+
+Dimana `rating` = Google rating (1-5), `distance` = jarak dari user, `maxRadius` = filter radius (default 10km).
+
+---
+
+### 4. Partner Detail (`(tabs)/explore/[id].tsx`)
+
+```
+┌─────────────────────────────┐
+│  ← Back                     │
+│ ┌───────────────────────────┐│
+│ │                           ││
+│ │      HERO IMAGE 📷        ││
+│ │      (Google Places)      ││
+│ │                           ││
+│ └───────────────────────────┘│
+│                             │
+│  Cafe Kopi Kenangan         │
+│  📍 Jl. Sudirman No.12     │
+│  ⭐ 4.5  (245 ulasan)       │
+│  🚶 2.3 km dari Anda       │
+│                             │
+│  ── Ulasan Google ────────  │
+│  ┌───────────────────────┐  │
+│  │ 👤 Budi  ⭐⭐⭐⭐⭐      │  │
+│  │ "Tempatnya nyaman..." │  │
+│  ├───────────────────────┤  │
+│  │ 👤 Ani   ⭐⭐⭐⭐        │  │
+│  │ "Pelayanan bagus..."  │  │
+│  ├───────────────────────┤  │
+│  │ 👤 Rudi  ⭐⭐⭐⭐⭐      │  │
+│  │ "Recommended!"        │  │
+│  └───────────────────────┘  │
+│                             │
+│ ┌───────────────────────────┐│
+│ │   ▶ APPLY KERJA SAMA     ││
+│ └───────────────────────────┘│
+└─────────────────────────────┘
+```
+
+**Layout:**
+- Hero image (foto dari Google Places)
+- Nama mitra, alamat lengkap
+- Rating bar: ⭐ 4.5 (245 ulasan)
+- Jarak dari posisi supplier
+- Section "Ulasan Google" — 3 ulasan terbaru
+- Sticky bottom bar: Tombol **"Apply Kerja Sama"** (gradient biru, full-width)
+
+---
+
+### 5. Apply Form (Modal)
+
+```
+┌─────────────────────────────┐
+│         (dimmed bg)         │
+│                             │
+│ ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐ │
+│   ═══ (drag handle) ═══    │
+│ │                         │ │
+│   Apply ke: Cafe Kenangan   │
+│ │                         │ │
+│   Pesan untuk mitra         │
+│ │ ┌─────────────────────┐ │ │
+│   │ Perkenalkan bisnis  │   │
+│ │ │ Anda dan jelaskan   │ │ │
+│   │ tujuan kerja sama...│   │
+│ │ │                     │ │ │
+│   └─────────────────────┘   │
+│ │                         │ │
+│   ┌─────────────────────┐   │
+│ │ │ 📎 Upload Katalog   │ │ │
+│   │    (opsional)       │   │
+│ │ └─────────────────────┘ │ │
+│                             │
+│ │ ┌─────────────────────┐ │ │
+│   │  ▶ KIRIM LAMARAN    │   │
+│ │ └─────────────────────┘ │ │
+│ └ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘ │
+└─────────────────────────────┘
+
+         ┌──────────┐
+   Sukses │   ✓     │  (Lottie)
+         │ Lamaran  │
+         │ Terkirim!│
+         └──────────┘
+```
+
+**Layout:**
+- Modal bottom sheet
+- Textarea: "Pesan untuk mitra" (placeholder: "Perkenalkan bisnis Anda...")
+- Upload dokumen katalog (opsional, 1 file PDF/gambar)
+- Tombol **"Kirim Lamaran"**
+- Success animation (Lottie checkmark)
+
+**Data disimpan:** Firestore `applications/{autoId}`
+```typescript
+{
+  supplierId: string,
+  partnerId: string,     // Google Place ID
+  partnerName: string,
+  message: string,
+  attachmentUrl?: string,
+  status: "pending" | "accepted" | "rejected",
+  createdAt: Timestamp
+}
+```
+
+---
+
+### 6. Application Status Tracker (`(tabs)/applications/index.tsx`)
+
+```
+┌─────────────────────────────┐
+│  Lamaran Saya               │
+│                             │
+│ [Semua][Pending][✓][✗]      │
+│                             │
+│ ┌─────────────────────────┐ │
+│ │ 🏪 Cafe Kenangan        │ │
+│ │ 📅 10 Mar 2026          │ │
+│ │              ┌────────┐ │ │
+│ │              │PENDING │ │ │
+│ │              └────────┘ │ │
+│ └─────────────────────────┘ │
+│ ┌─────────────────────────┐ │
+│ │ 🏪 Toko Sejahtera       │ │
+│ │ 📅 8 Mar 2026           │ │
+│ │              ┌────────┐ │ │
+│ │              │DITERIMA│ │ │
+│ │              └────────┘ │ │
+│ └─────────────────────────┘ │
+│ ┌─────────────────────────┐ │
+│ │ 🏪 Bengkel Maju         │ │
+│ │ 📅 5 Mar 2026           │ │
+│ │              ┌────────┐ │ │
+│ │              │DITOLAK │ │ │
+│ │              └────────┘ │ │
+│ └─────────────────────────┘ │
+│                             │
+├─────────────────────────────┤
+│  🗺 Explore  📋 App  👤 Me │
+└─────────────────────────────┘
+```
+
+**Layout:**
+- Header: "Lamaran Saya"
+- Tab filter: Semua · Pending · Diterima · Ditolak
+- List item per lamaran:
+  - Nama mitra + foto kecil
+  - Tanggal apply
+  - Status badge berwarna:
+    - 🟡 **Pending** (kuning)
+    - 🟢 **Diterima** (hijau)
+    - 🔴 **Ditolak** (merah)
+- Empty state illustration jika belum ada lamaran
+
+---
+
+### 7. Profile (`(tabs)/profile/index.tsx`)
+
+```
+┌─────────────────────────────┐
+│  Profil Saya                │
+│                             │
+│         ┌─────┐             │
+│         │ 📷  │             │
+│         └─────┘             │
+│     PT. Sumber Makmur       │
+│     supplier@mail.com       │
+│                             │
+│  ┌───────────────────────┐  │
+│  │ 📦 Kategori: Makanan  │  │
+│  │ 📍 Lokasi: Jakarta    │  │
+│  └───────────────────────┘  │
+│                             │
+│  ── Statistik ────────────  │
+│  ┌───────┬───────┬───────┐  │
+│  │  12   │   8   │   2   │  │
+│  │ Total │Diterima│Ditolak│  │
+│  └───────┴───────┴───────┘  │
+│                             │
+│  ┌───────────────────────┐  │
+│  │    ✏️ Edit Profil      │  │
+│  └───────────────────────┘  │
+│  ┌───────────────────────┐  │
+│  │    🚪 Logout           │  │
+│  └───────────────────────┘  │
+│                             │
+├─────────────────────────────┤
+│  🗺 Explore  📋 App  👤 Me │
+└─────────────────────────────┘
+```
+
+**Layout:**
+- Avatar + nama bisnis (editable)
+- Info card: Kategori, Lokasi
+- Statistik mini: Total Lamaran · Diterima · Ditolak
+- Tombol: Edit Profil · Logout
+
+---
+
+## Design System
+
+### Color Palette
+| Token | Hex | Penggunaan |
+|---|---|---|
+| `primary` | `#3B82F6` | Tombol, aksen utama |
+| `primary-gradient` | `#3B82F6 → #8B5CF6` | Header, CTA button |
+| `background` | `#0F172A` | Background utama (dark) |
+| `surface` | `#1E293B` | Card, bottom sheet |
+| `surface-glass` | `rgba(30,41,59,0.7)` + blur | Glassmorphism elements |
+| `text-primary` | `#F1F5F9` | Teks utama |
+| `text-secondary` | `#94A3B8` | Teks sekunder |
+| `success` | `#10B981` | Status "Diterima" |
+| `warning` | `#F59E0B` | Status "Pending" |
+| `danger` | `#EF4444` | Status "Ditolak" |
+
+### Typography
+| Style | Font | Size | Weight |
+|---|---|---|---|
+| Heading 1 | Inter | 28px | Bold |
+| Heading 2 | Inter | 22px | SemiBold |
+| Body | Inter | 16px | Regular |
+| Caption | Inter | 13px | Medium |
+| Button | Inter | 16px | SemiBold |
+
+### Spacing Scale
+`4 · 8 · 12 · 16 · 20 · 24 · 32 · 48 · 64`
+
+### Border Radius
+- Small: `8px` (inputs, chips)
+- Medium: `12px` (cards)
+- Large: `16px` (bottom sheet)
+- Full: `9999px` (avatar, FAB)
+
+---
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Keputusan yang perlu persetujuan:**
+> 1. **Tech stack:** React Native + Expo (bukan Flutter atau native). Apakah sudah sesuai preferensi?
+> 2. **Dark theme** sebagai default — atau mau light theme?
+> 3. **Bottom Tab** menggunakan 3 tab (Explore, Applications, Profile) — cukup atau perlu tab tambahan?
+> 4. **Google Places API** memerlukan API key berbayar (ada free tier $200/bulan). Untuk development, bisa pakai dummy data dulu?
+
+---
+
+## Verification Plan
+
+### Automated
+- `npx expo start` — pastikan app bisa launch tanpa error
+- `npx tsc --noEmit` — type-check semua file TypeScript
+- Navigasi setiap screen melalui Expo Go di device/emulator
+
+### Manual (dengan bantuan user)
+1. Buka app di Expo Go, test **alur lengkap**: Register → Profile → Explore → Detail → Apply → Status
+2. Verifikasi **map markers** muncul sesuai lokasi
+3. Verifikasi **sorting** mitra berdasarkan skor AI
+4. Test **responsive layout** di layar berbeda (iPhone SE, iPhone 15, Android)
+5. Pastikan **semua status badge** tampil dengan warna yang benar

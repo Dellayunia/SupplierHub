@@ -1,0 +1,34 @@
+@import './fonts.css';
+@import './tailwind.css';
+@import './theme.css';
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
+body {
+  background: #0A0E1A;
+  overflow-x: hidden;
+}
+
+/* Hide scrollbars but allow scrolling */
+::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #374151;
+}
+
+/* Prevent text selection on buttons */
+button {
+  user-select: none;
+  -webkit-user-select: none;
+}

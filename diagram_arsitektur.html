@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagram Arsitektur Teknologi SupplierHub</title>
+    <!-- Memuat Mermaid.js dari CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+    </script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; color: #0f172a; padding: 40px; text-align: center; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        h1 { color: #1e293b; font-size: 24px; margin-bottom: 30px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Diagram Arsitektur Teknologi SupplierHub 🚀</h1>
+        
+        <!-- Blok kode Mermaid -->
+        <div class="mermaid">
+            graph TD
+                classDef frontend fill:#3B82F6,stroke:#1D4ED8,stroke-width:2px,color:#fff
+                classDef backend fill:#00D084,stroke:#047857,stroke-width:2px,color:#fff
+                classDef cloud fill:#F59E0B,stroke:#B45309,stroke-width:2px,color:#fff
+                classDef ai fill:#8B5CF6,stroke:#5B21B6,stroke-width:2px,color:#fff
+
+                subgraph Frontend ["📱 FRONTEND (Aplikasi Ponsel)"]
+                    MobileApp("Aplikasi Mobile Expo") ::: frontend
+                    UI["React Native (TypeScript)"]
+                    Nav["React Navigation"]
+                    LocalDB[("AsyncStorage Lokal")]
+                    Location["Expo Location (GPS)"]
+
+                    MobileApp --- UI
+                    MobileApp --- Nav
+                    MobileApp --- LocalDB
+                    MobileApp --- Location
+                end
+
+                subgraph Backend ["⚙️ BACKEND (Server)"]
+                    Server("Server: Node.js") ::: backend
+                    Router["REST API Endpoint"]
+                    Server --- Router
+                end
+
+                subgraph Cloud ["☁️ CLOUD & KECERDASAN BUATAN"]
+                    Auth["Firebase Auth (Keamanan)"] ::: cloud
+                    Firestore[("Firebase Firestore (Database)")] ::: cloud
+                    MapsAPI(("Google Places API")) ::: cloud
+                    Gemini(("Google Gemini 2.0 AI")) ::: ai
+                end
+
+                MobileApp <==>|Login| Auth
+                MobileApp <==>|Simpan/Muat Data| Firestore
+                Location -->|Koordinat| MobileApp
+                MobileApp -->|Cari Alamat GPS| MapsAPI
+                
+                MobileApp -->|Kirim Data Rekomendasi| Server
+                Server -->|Generate Surat Otomatis| Gemini
+                Gemini -.->|Hasil Copywriting Proposal| Server
+                Server -.->|Kirim ke Layar HP| MobileApp
+        </div>
+    </div>
+</body>
+</html>

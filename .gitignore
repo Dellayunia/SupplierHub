@@ -1,0 +1,30 @@
+# ─── SupplierHub Open Data Repository ─────────────────────────────────────────
+# Root-level .gitignore for monorepo
+
+# dependencies
+node_modules/
+
+# build artifacts
+dist/
+web-build/
+
+# environment secrets (API keys — NEVER commit)
+.env
+.env.local
+.env.*.local
+
+# Expo
+.expo/
+
+# OS files
+.DS_Store
+Thumbs.db
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Java crash logs (build artifacts)
+hs_err_*.log
+replay_*.log

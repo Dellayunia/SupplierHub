@@ -1,0 +1,14 @@
+ID,Indikator_Instrumen_SUS,Tipe_Pertanyaan,Rata_Rata_Skala_1_5,Skor_Konversi
+Q1,"Saya pikir saya akan sering menggunakan aplikasi ini.",Positif,4.50,3.50
+Q2,"Aplikasi ini rumit/kompleks, padahal bisa dibuat lebih sederhana.",Negatif,1.58,3.42
+Q3,"Saya merasa aplikasi pencarian mitra ini mudah untuk digunakan.",Positif,4.46,3.46
+Q4,"Saya butuh bantuan dari orang lain untuk menggunakan aplikasi ini.",Negatif,1.83,3.17
+Q5,"Berbagai fitur (Maps, AI, Peringkat) berjalan terintegrasi dengan baik.",Positif,4.42,3.42
+Q6,"Terdapat banyak hal inkonsistensi yang janggal pada aplikasi ini.",Negatif,1.42,3.58
+Q7,"Mayoritas orang akan belajar memakai aplikasi ini dengan sangat cepat.",Positif,4.21,3.21
+Q8,"Aplikasi ini terasa sangat canggung (tidak enak) untuk digunakan.",Negatif,1.38,3.62
+Q9,"Saya merasa aman memakai aplikasi ini tanpa takut membuat kesalahan.",Positif,4.21,3.21
+Q10,"Saya harus mempelajari hal baru agar mahir memakai aplikasi ini.",Negatif,1.83,3.17
+,,,,
+,,Total Sigma,,33.76
+,,Skor Akhir SUS (Sigma x 2.5),,84.40

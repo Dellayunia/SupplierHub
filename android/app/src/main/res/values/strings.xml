@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Supplier App</string>
+    <string name="title_activity_main">Supplier App</string>
+    <string name="package_name">com.supplier.app</string>
+    <string name="custom_url_scheme">com.supplier.app</string>
+</resources>

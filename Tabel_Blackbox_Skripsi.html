@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: "Times New Roman", Times, serif;
+    padding: 20px;
+    background-color: white; /* Supaya saat di-copy tidak abu-abu */
+  }
+  .table-caption {
+    text-align: center;
+    font-variant: small-caps;
+    font-size: 11pt;
+    margin-bottom: 5px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+    font-size: 10pt; /* Ukuran font standar tabel IEEE */
+  }
+  th, td {
+    border: 1px solid black; /* Garis grid standar seperti di gambar */
+    padding: 6px;
+  }
+  th {
+    background-color: transparent; /* IEEE tidak pakai warna latar belakang di header */
+    font-weight: bold;
+    text-align: center; /* IEEE header biasanya di tengah */
+  }
+  td {
+    text-align: left;
+  }
+  .center-col {
+    text-align: center; /* Untuk kolom Nomor dan Kesimpulan */
+  }
+</style>
+</head>
+<body>
+
+<div class="table-caption">TABLE I. Hasil Pengujian Black-Box Aplikasi SupplierHub</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Modul Fungsional</th>
+      <th>Skenario Uji / Kasus Pengujian (Test Case)</th>
+      <th>Hasil yang Diharapkan (Expected Result)</th>
+      <th>Kesimpulan</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="center-col">1</td>
+      <td><b>Otentikasi (Auth)</b></td>
+      <td>Kasus 1: Akses <i>Login</i> menggunakan data Email & Password kosong.</td>
+      <td>Muncul notifikasi validasi wajib diisi, sistem mencegah masuk ke Beranda.</td>
+      <td class="center-col">Valid</td>
+    </tr>
+    <tr>
+      <td class="center-col">2</td>
+      <td><b>Otentikasi (Auth)</b></td>
+      <td>Kasus 2: Akses <i>Login</i> menggunakan Email terdaftar & Password yang benar.</td>
+      <td>Sistem berhasil mengarahkan pengguna ke halaman Beranda / Catalog Screen.</td>
+      <td class="center-col">Valid</td>
+    </tr>
+    <tr>
+      <td class="center-col">3</td>
+      <td><b>Otentikasi (Auth)</b></td>
+      <td>Kasus 3: Membuat akun baru dengan email yang sudah digunakan.</td>
+      <td>Aplikasi menolak pembuatan akun dan mengeluarkan peringatan "Email sudah terdaftar".</td>
+      <td class="center-col">Valid</td>
+    </tr>
+    <tr>
+      <td class="center-col">4</td>
+      <td><b>Katalog & Navigasi</b></td>
+      <td>Kasus 4: Menggunakan <i>Search Bar</i> untuk mencari nama Mitra Bisnis.</td>
+      <td>Tampilan daftar mitra tersaring hanya memunculkan nama hasil pencarian.</td>
+      <td class="center-col">Valid</td>
+    </tr>
+    <tr>
+      <td class="center-col">5</td>
+      <td><b>Katalog & Navigasi</b></td>
+      <td>Kasus 5: Klik tombol profil salah satu Mitra yang ditampilkan di Peta/List.</td>
+      <td>Screen berpindah ke halaman detail spesifik dari Mitra Bisnis yang di-klik.</td>
+      <td class="center-col">Valid</td>
+    </tr>
+    <tr>
+      <td class="center-col">6</td>
+      <td><b>AI Proposal (Core)</b></td>
+      <td>Kasus 6: Menekan tombol "Generate AI Proposal" pada <i>Partner Detail Screen</i> tanpa deskripsi usaha pengguna.</td>
+      <td>Sistem meminta kelengkapan profile pengguna sebelum fungsi di-eksekusi.</td>
+      <td class="center-col">Valid</td>
+    </tr>
+    <tr>
+      <td class="center-col">7</td>
+      <td><b>AI Proposal (Core)</b></td>
+      <td>Kasus 7: Menekan tombol "Generate AI Proposal" ketika jaringan internet dimatikan.</td>
+      <td>Aplikasi mengenali <i>Timeout</i> dan menampilkan peringatan jaringan terputus (Cegah App Crash).</td>
+      <td class="center-col">Valid</td>
+    </tr>
+    <tr>
+      <td class="center-col">8</td>
+      <td><b>AI Proposal (Core)</b></td>
+      <td>Kasus 8: Menekan eksekusi "Generate AI Proposal" secara utuh (Kondisi Normal).</td>
+      <td>Muncul <i>loading state</i>, dan API berhasil meluluskan teks <i>draft proposal</i> di layar pengguna.</td>
+      <td class="center-col">Valid</td>
+    </tr>
+    <tr>
+      <td class="center-col">9</td>
+      <td><b>Notifikasi</b></td>
+      <td>Kasus 9: Menerima integrasi <i>local notification state</i> setelah tugas AI diselesaikan.</td>
+      <td>Ponsel memunculkan notifikasi atau ikon lonceng muncul indikator "1".</td>
+      <td class="center-col">Valid</td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

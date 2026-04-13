@@ -1,0 +1,4 @@
+Candidate_ID,Haversine_Distance_Km,Google_Rating,Norm_C1_Distance_Cost,Norm_C2_Rating_Benefit,SAW_Final_Score,Rank
+Mitra_A,1.2,4.0,1.00,0.83,93.20,1
+Mitra_B,2.5,4.8,0.48,1.00,68.80,2
+Mitra_C,4.8,4.2,0.25,0.87,49.80,3

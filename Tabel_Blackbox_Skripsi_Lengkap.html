@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    font-family: "Times New Roman", Times, serif;
+    padding: 20px;
+    background-color: white; 
+  }
+  .table-caption {
+    text-align: center;
+    font-variant: small-caps; 
+    font-size: 11pt;
+    margin-bottom: 5px;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+    font-size: 10pt; 
+  }
+  th, td {
+    border: 1px solid black; 
+    padding: 6px;
+  }
+  th {
+    background-color: transparent; 
+    font-weight: bold;
+    text-align: center; 
+  }
+  td {
+    text-align: left;
+    vertical-align: top;
+  }
+  .center-col {
+    text-align: center; 
+  }
+  .bold-row {
+    font-weight: bold;
+    background-color: #f9f9f9;
+  }
+</style>
+</head>
+<body>
+
+<div class="table-caption">TABLE II. SKENARIO LENGKAP PENGUJIAN FUNGSIONALITAS (BLACK-BOX) SISTEM SUPPLIERHUB</div>
+
+<table>
+  <thead>
+    <tr>
+      <th style="width: 5%;">ID</th>
+      <th style="width: 30%;">Skenario Kondisi Uji (Fungsi)</th>
+      <th style="width: 30%;">Ekspektasi Luaran Internal (*Expected Output*)</th>
+      <th style="width: 25%;">Hasil Eksekusi Aktual (*Actual Output*)</th>
+      <th style="width: 10%;">Simpulan Uji</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- SEGMEN AUTENTIKASI -->
+    <tr class="bold-row">
+      <td colspan="5">Segmen A: Validasi Modul Autentikasi & Sesi Otentikasi</td>
+    </tr>
+    <tr>
+      <td class="center-col">B01</td>
+      <td>**Login Valid:** Input Email dan Sandi sesuai dengan data rekam *database LBS*.</td>
+      <td>Sistem menerima kredibilitas pengguna dan menavigasikan aksi layar (*Route*) ke halaman *Beranda (Home)*.</td>
+      <td>Aplikasi sukses berpindah dari `AuthStack` masuk ke menu antarmuka utama sistem.</td>
+      <td class="center-col"><b>Valid</b></td>
+    </tr>
+    <tr>
+      <td class="center-col">B02</td>
+      <td>**Autentikasi Sandi Salah:** Input Email benar, namun komponen input Sandi disalahkan acak.</td>
+      <td>Sistem memutus upaya perpindahan *Route* dan melempar notifikasi (*Error Alert*) kepada pengguna.</td>
+      <td>*State* ditolak masuk; muncul notifikasi pemberitahuan akses silang ditolak.</td>
+      <td class="center-col"><b>Valid</b></td>
+    </tr>
+    <tr>
+      <td class="center-col">B03</td>
+      <td>**Blokade Register Kosong:** Menekan instrumen aksi *"Daftar"* tanpa mengisi identitas apa pun.</td>
+      <td>Atribut validasi (*form guard*) wajib menahan *request payload* agar tidak dikirim ke *backend*.</td>
+      <td>Aplikasi diam di tempat dan baris formulir memberikan garis peringatan warna merah.</td>
+      <td class="center-col"><b>Valid</b></td>
+    </tr>
+    <tr>
+      <td class="center-col">B04</td>
+      <td>**Penghancuran Sesi (Logout):** Menekan tombol keluar (Log Out) pada antarmuka *Settings/Profile*.</td>
+      <td>Sistem operasi lokal harus menghapus memori *token / cache* dan melempar akses *Route* kembali ke layar masukan.</td>
+      <td>*Token* pengguna musnah dari aplikasi lokal, navigasi segera terisolasi ke halaman *Login*.</td>
+      <td class="center-col"><b>Valid</b></td>
+    </tr>
+
+    <!-- SEGMEN LOGIKA ALGORITMA -->
+    <tr class="bold-row">
+      <td colspan="5">Segmen B: Validasi Komputasi Algoritmis & Geospasial</td>
+    </tr>
+    <tr>
+      <td class="center-col">B05</td>
+      <td>**Bypass Radius Koordinat:** *Backend* diuji kelayakan permintaan dengan mendesak parameter asimtot di atas radius statik 5.000 meter.</td>
+      <td>Sistem perantara Node.js wajib menolak instruksi iterasi API jika batas melebihi absolut 5 Km.</td>
+      <td>API memutus iterasi rute *Places* yang melanggar batas maksimum konfigurasi (5.000m).</td>
+      <td class="center-col"><b>Valid</b></td>
+    </tr>
+    <tr>
+      <td class="center-col">B06</td>
+      <td>**Hitung Geometris Jarak:** Sinkronisasi visual koordinat garis lengkung bumi via Formula Haversine dari titik asal ke kandidat POI.</td>
+      <td>Angka metrik jarak di dalam kartu UI wajib selaras membandingkan komputasi titik `Lat/Lng` dengan logika visual peta bumi nyata.</td>
+      <td>Aplikasi mencetak hasil parameter kilometer yang selaras, terhindar komputasi salah Euclidean linier datar.</td>
+      <td class="center-col"><b>Valid</b></td>
+    </tr>
+    <tr>
+      <td class="center-col">B07</td>
+      <td>**Kalkulasi Silang Matriks SAW:** Kasus ekstrem sistem dihadapkan kandidat *Mitra A* (Sangat Dekat) berlawanan dengan *Mitra B* (*Rating* Publik Sangat Tinggi).</td>
+      <td>*Logic* sistem wajib memangkas dan memenangkan kriteria letak (Jarak) akibat preferensi faktor bobot kemutlakan $W$ (0.6).</td>
+      <td>Skor akhir ($V_i$) sukses meletakkan peringkat #1 pada sasaran bernilai jarak kurir minimum.</td>
+      <td class="center-col"><b>Valid</b></td>
+    </tr>
+    <tr>
+      <td class="center-col">B08</td>
+      <td>**Navigasi Detail Entitas:** Pengguna memijat komponen *Card Ranking* untuk membaca riwayat/ulasan detail spesifik milik *Supplier*.</td>
+      <td>Komponen navigasi React Native mentransisikan referensi *params ID* kandidat secara mutlak menuju halaman baru yang memuat metadatenya.</td>
+      <td>Halaman *Detail Partner* terbaca sinkron sesuai *ID* pilihan yang diklik tanpa pertukaran identitas palsu.</td>
+      <td class="center-col"><b>Valid</b></td>
+    </tr>
+
+    <!-- SEGMEN AI DAN LATENCY -->
+    <tr class="bold-row">
+      <td colspan="5">Segmen C: Evaluasi Sintesis Gemini LLM & Interupsi Skrip</td>
+    </tr>
+    <tr>
+      <td class="center-col">B09</td>
+      <td>**Injeksi Parameter Otomatis (Prompting):** Implementasi penekanan tindakan pembuat (*Generate*) Proposal Bisnis menggunakan skrip AI Generatif LLM.</td>
+      <td>Variabel letak subjek UMKM (identitas profil, nama target rekanan) diekstraksi mulus ke dalam JSON parameter LLM Google Gemini.</td>
+      <td>*Prompt* paramater tereksekusi, *Output* teks proposal tercipta menggunakan gaya Bahasa Bisnis Formal sesuai kustomisasi lokal awal.</td>
+      <td class="center-col"><b>Valid</b></td>
+    </tr>
+    <tr>
+      <td class="center-col">B10</td>
+      <td>**Anomali Respons Interupsi Waktu (Latency):** Kasus dimana panggilan API LLM mengekstrak komputasi tinggi memakan *delay* ekstrem (di atas 3 detik).</td>
+      <td>Aplikasi tidak boleh lumpuh statis (*Force Close/ANR*). Modul UI wajiib memicu *animation loading* seketika untuk meredam persepsi kebosanan.</td>
+      <td>Skrip asinkrosnus sukses menahan *State* dengan *Spinner Indicator* hingga respons API ditransmisikan (~4 Detik latensi pemulihan).</td>
+      <td class="center-col"><b>Valid</b></td>
+    </tr>
+    <tr>
+      <td class="center-col">B11</td>
+      <td>**Penahanan Galat Kuota API LLM:** Jika transmisi token akses Gemini tidak mampu tersambung karena kelebihan permintaan limit (*Rate Limit*).</td>
+      <td>Perintah instruksi akan terhenti terkunci dan UI merilis *Error Handing System* ramah pengguna (*"Network Error, Try Again"*).</td>
+      <td>Rejeksi *Token/Limits API* ditangkap oleh siklus *Catch/Try Block* aman pada React Native.</td>
+      <td class="center-col"><b>Valid</b></td>
+    </tr>
+
+    <!-- SEGMEN GENERAL CRUD & USABILITY -->
+    <tr class="bold-row">
+      <td colspan="5">Segmen D: Fungsionalitas Umum (CRUD) & Menu Status</td>
+    </tr>
+    <tr>
+      <td class="center-col">B12</td>
+      <td>**Manajemen Tambah Katalog:** Pemilik usaha mencoba menambahkan jenis SKU list barang industri baru via halaman Pengaturan (*Settings*).</td>
+      <td>Integrasi *form* mencetak objek rekam lokal ke instumen Firebase/Basis Data agar produk terlihat subjek audiens pada aplikasi.</td>
+      <td>Entitas Katalog baru di Beranda tersambung masuk dan tertambahkan otomatis di hitungan layar muka.</td>
+      <td class="center-col"><b>Valid</b></td>
+    </tr>
+    <tr>
+      <td class="center-col">B13</td>
+      <td>**Visualisasi Maps Engine:** Beranjak melihat mode "Peta Mitra" (Bottom Tab Maps Layout).</td>
+      <td>Pustaka perpustakaan grafis merender kanvas Google Maps *Embed SDK* mendistribusikan *Pin Markers* lokasi *Supplier* pada radius sekitar asimtotik.</td>
+      <td>Peta spasial termuat lancar tanpa grafik cacat memfokuskan lokasi pusat *Handphone* GPS terkalibrasi ke dalam sentris pandang awal pemakai.</td>
+      <td class="center-col"><b>Valid</b></td>
+    </tr>
+    <tr>
+      <td class="center-col">B14</td>
+      <td>**Pemantauan Interupsi Bottom-Tab:** Pengguna memintas pergantian menu navigasi antarmuka tabung bawah berulang kali (Home <-> Catalog <-> Notifications <-> Maps).</td>
+      <td>*Router App Stack* mempertahankan statis *lifecycle event* menghindari ter-relokasinya antarmuka (cegah *Memory Leakage* gawai memori rendah).</td>
+      <td>Perpindahan aplikasi asinkron berjalan cepat (instan), aman dari keruntuhan antarmuka (*render collapse*).</td>
+      <td class="center-col"><b>Valid</b></td>
+    </tr>
+    <tr>
+      <td class="center-col">B15</td>
+      <td>**Modul Pembaruan Profil Sistem:** Memutakhirkan penyesuaian nama merek *brand* perseroan di laman Edit Profil (*Settings*).</td>
+      <td>Aplikasi terprogram merelay perubahan pada state konteks pusat (*AppContext*) sehingga seluruh variabel sapaan UI mutakhir tersinkron.</td>
+      <td>Nama inisialisasi di Beranda ("Selamat Datang, [Company]") terbarui sesuai _State Management Update_.</td>
+      <td class="center-col"><b>Valid</b></td>
+    </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

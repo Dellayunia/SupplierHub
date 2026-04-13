@@ -1,0 +1,16 @@
+Test_ID,Segment,Module,Test_Scenario,Expected_Result,Actual_Result,Verdict
+B01,A: Autentikasi,Login Valid,Input Email dan Sandi sesuai data database,Sistem menavigasikan Route ke halaman Beranda (Home),Aplikasi sukses berpindah dari AuthStack ke menu utama,Valid
+B02,A: Autentikasi,Login Sandi Salah,Input Email benar namun Sandi disalahkan acak,Sistem memutus upaya Route dan mengeluarkan Error Alert,State ditolak; muncul notifikasi akses ditolak,Valid
+B03,A: Autentikasi,Register Kosong,Menekan Daftar tanpa mengisi identitas,Validasi form guard menahan request payload,Formulir memberikan garis peringatan warna merah,Valid
+B04,A: Autentikasi,Logout,Menekan tombol Log Out pada Settings/Profile,Menghapus token/cache dan melempar Route ke Login,Token musnah; navigasi ke halaman Login,Valid
+B05,B: Algoritmis,Bypass Radius,Backend diuji dengan parameter di atas radius 5000m,Sistem menolak instruksi jika melebihi 5 Km,API memutus iterasi rute Places yang melanggar batas,Valid
+B06,B: Algoritmis,Hitung Haversine,Sinkronisasi visual koordinat via Formula Haversine,Angka jarak di UI selaras dengan komputasi Lat/Lng,Hasil parameter kilometer selaras; terhindar Euclidean linier,Valid
+B07,B: Algoritmis,SAW Cross Matrix,Kasus ekstrem Mitra A (dekat) vs Mitra B (rating tinggi),Mitra terdekat menang akibat bobot W=0.6,Skor akhir Vi letakkan peringkat 1 pada jarak minimum,Valid
+B08,B: Algoritmis,Navigasi Detail,Klik Card Ranking untuk baca detail Supplier,React Native mentransisikan params ID ke halaman baru,Halaman Detail Partner sinkron sesuai ID pilihan,Valid
+B09,C: AI/LLM,Generate Proposal,Menekan Generate AI Proposal,Variabel profil diekstraksi ke JSON parameter Gemini,Prompt tereksekusi; teks proposal tercipta sesuai kustomisasi,Valid
+B10,C: AI/LLM,Latency Handling,Panggilan API LLM dengan delay ekstrem > 3 detik,UI memicu animation loading; tidak force close,Spinner Indicator aktif hingga respons API (latensi ~4s),Valid
+B11,C: AI/LLM,Rate Limit,Gemini token akses tidak tersambung karena rate limit,Error Handling System ramah pengguna,Rejeksi ditangkap oleh Catch/Try Block aman,Valid
+B12,D: CRUD,Tambah Katalog,Menambahkan SKU list barang baru via Settings,Form mencetak objek ke Firebase/Database,Entitas Katalog baru tersambung di Beranda,Valid
+B13,D: CRUD,Maps Engine,Melihat mode Peta Mitra (Bottom Tab Maps),Google Maps merender Pin Markers lokasi radius,Peta spasial termuat lancar; GPS terkalibrasi,Valid
+B14,D: CRUD,Bottom Tab Switch,Pergantian menu navigasi berulang kali,Router App Stack mempertahankan lifecycle event,Perpindahan berjalan instan; aman dari render collapse,Valid
+B15,D: CRUD,Update Profil,Memutakhirkan nama brand di Edit Profil,AppContext merelay perubahan ke seluruh UI,Nama di Beranda terbarui sesuai State Management,Valid

@@ -1,0 +1,68 @@
+{
+  "expo": {
+    "name": "SupplierAI",
+    "slug": "supplier-ai",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0A0E1A"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.supplierai.app",
+      "config": {
+        "googleMapsApiKey": "EXPO_PUBLIC_GOOGLE_MAPS_KEY"
+      },
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Digunakan untuk menemukan mitra bisnis terdekat.",
+        "NSLocationAlwaysUsageDescription": "Digunakan untuk menemukan mitra bisnis terdekat.",
+        "NSCameraUsageDescription": "Untuk mengambil foto profil bisnis Anda.",
+        "NSPhotoLibraryUsageDescription": "Untuk memilih foto profil bisnis dari galeri."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0A0E1A"
+      },
+      "package": "com.supplierai.app",
+      "config": {
+        "googleMaps": {
+          "apiKey": "EXPO_PUBLIC_GOOGLE_MAPS_KEY"
+        }
+      },
+      "permissions": [
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-location",
+      "expo-image-picker"
+    ],
+    "extra": {
+      "firebaseApiKey": "AIzaSyBumyszUgSG-f9SJIoP_wpbQ5U4N51-1fc",
+      "firebaseAuthDomain": "supplierai-8a07e.firebaseapp.com",
+      "firebaseProjectId": "supplierai-8a07e",
+      "firebaseStorageBucket": "supplierai-8a07e.firebasestorage.app",
+      "firebaseMessagingSenderId": "704183618935",
+      "firebaseAppId": "1:704183618935:web:5efccfed18b2ad0f072572",
+      "eas": {
+        "projectId": "c5761e96-7d48-44b3-8b53-795375dcae6c"
+      }
+    }
+  }
+}
